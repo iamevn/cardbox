@@ -103,7 +103,45 @@ module ycomb() {
   }
 }
 
+module box_sides_bottom() {
+  intersection() {
+    translate([-CARD_H/5, 0, -CARD_W/5])
+      scale([1.25, 1, 1.25])
+      deck_array();
+    plain_box();
+  }
+}
+
+module xcomb() {
+  translate([-CARD_H/2, 0, 0])
+  scale([2, 1, 1])
+  intersection() {
+    translate([CARD_H+WALL_THICKNESS, 0, 0])
+      rotate([0, -90, 0])
+      linear_extrude(CARD_H + 2*WALL_THICKNESS)
+      honeycomb_alt(CARD_W, DECK_ARRAY_THICKNESS, 5, 1);
+    deck_array();
+    translate([0, 0, -WALL_THICKNESS]) 
+      hull()
+      plain_box();
+  }
+}
+
+module zcomb() {
+  render()
+  translate([0, 0, 5])
+  scale([1, 1, 10])
+  intersection() {
+    translate([0, 0, -WALL_THICKNESS])
+      linear_extrude(WALL_THICKNESS)
+      honeycomb_alt(CARD_H, DECK_ARRAY_THICKNESS, 5, 1);
+    box_sides_bottom();
+  }
+}
+
 difference() {
   plain_box();
+  xcomb();
   ycomb();
+  zcomb();
 }
