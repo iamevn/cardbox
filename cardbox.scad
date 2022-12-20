@@ -9,7 +9,7 @@
 //   65mm
 
 // units: mm
-WALL_THICKNESS = 2;
+WALL_THICKNESS = 1.2;
 CARD_W = 60;
 CARD_H = 95;
 
