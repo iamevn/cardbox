@@ -68,17 +68,18 @@ module outer_box() {
           CARD_W * BOX_HEIGHT_RATIO + WALL_THICKNESS * 1]);
 }
 
-module grip_cutouts() {
+module grip_cutouts(d=CUTOUT_DIAMETER) {
 translate([CARD_H/2, -DECK_ARRAY_THICKNESS/2, CARD_W*BOX_HEIGHT_RATIO + CUTOUT_OFFSET])
-rotate([-90]) cylinder(DECK_ARRAY_THICKNESS*2, d=CUTOUT_DIAMETER);
+rotate([-90]) cylinder(DECK_ARRAY_THICKNESS*2, d=d);
 }
 
-
-// card box model
-difference() {
-  outer_box();
-  deck_array();
-  grip_cutouts();
+module plain_box() {
+  // card box model
+  difference() {
+    outer_box();
+    deck_array();
+    grip_cutouts();
+  }
 }
 
 // debug decks
@@ -88,4 +89,21 @@ if (SHOW_DECKS) {
 
 if (SHOW_SIDE_DECK) {
  translate([100, 0, 0]) color("Blue") deck(CYCLIST_THICKNESS);
+}
+
+
+include <honeycomb.scad>
+module ycomb() {
+  difference() {
+    translate([0, DECK_ARRAY_THICKNESS * 1.5, 0])
+      rotate([90])
+      linear_extrude(DECK_ARRAY_THICKNESS * 2)
+      honeycomb_alt(CARD_H, CARD_W * BOX_HEIGHT_RATIO - WALL_THICKNESS, 5, 1);
+    grip_cutouts(CUTOUT_DIAMETER+(WALL_THICKNESS*2));
+  }
+}
+
+difference() {
+  plain_box();
+  ycomb();
 }

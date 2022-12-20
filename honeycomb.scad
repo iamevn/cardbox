@@ -50,3 +50,25 @@ module honeycomb(x, y, dia, wall)  {
 		}
 	}
 }
+
+module honeycomb_alt(x, y, dia, wall) {
+	smallDia = dia * cos(30);
+	projWall = wall * cos(30);
+
+	yStep = smallDia + wall;
+	xStep = dia*3/2 + projWall*2;
+
+	intersection()  {
+		square([x, y]);
+
+		// Note, number of step+1 to ensure the whole surface is covered
+		for (yOffset = [0:yStep:y+yStep], xOffset = [0:xStep:x+xStep]) {
+			translate([xOffset, yOffset]) {
+				hexagon(dia);
+			}
+			translate([xOffset + dia*3/4 + projWall, yOffset + (smallDia+wall)/2]) {
+				hexagon(dia);
+			}
+		}
+	}
+}
