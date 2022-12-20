@@ -10,19 +10,29 @@
 
 // units: mm
 WALL_THICKNESS = 1.2;
+// units: mm
 CARD_W = 60;
+// units: mm
 CARD_H = 95;
 
+// box height to card height ratio
 BOX_HEIGHT_RATIO = 0.675;
+// units: mm
 CUTOUT_DIAMETER = CARD_W * 1;
+// units: mm
 CUTOUT_OFFSET = CARD_W * 1/8;
 
+// units: mm
 FATIGUE_THICKNESS = 24;
+// units: mm
 CYCLIST_THICKNESS = 16;
-// BOT_THICKNESS = 6;
-// HELPER_THICKNESS = 6;
-// MAP_THICKNESS = 8;
+// units: mm
 OTHERS_THICKNESS = 8;
+
+// units: mm
+HEX_RADIUS = 6;
+// units: mm
+HEX_SPACING = 1.2;
 
 DECK_ARRAY_THICKNESS = 
   WALL_THICKNESS * 10
@@ -30,7 +40,7 @@ DECK_ARRAY_THICKNESS =
   + CYCLIST_THICKNESS * 6
   + OTHERS_THICKNESS * 3;
 
-// echo("DECK_ARRAY_THICKNESS", DECK_ARRAY_THICKNESS);
+echo("DECK_ARRAY_THICKNESS", DECK_ARRAY_THICKNESS);
 
 SHOW_DECKS = false;
 SHOW_SIDE_DECK = false;
@@ -94,11 +104,12 @@ if (SHOW_SIDE_DECK) {
 
 include <honeycomb.scad>
 module ycomb() {
+  // render()
   difference() {
     translate([0, DECK_ARRAY_THICKNESS * 1.5, 0])
       rotate([90])
       linear_extrude(DECK_ARRAY_THICKNESS * 2)
-      honeycomb_alt(CARD_H, CARD_W * BOX_HEIGHT_RATIO - WALL_THICKNESS, 5, 1);
+      honeycomb_alt(CARD_H, CARD_W * BOX_HEIGHT_RATIO - WALL_THICKNESS, HEX_RADIUS, HEX_SPACING);
     grip_cutouts(CUTOUT_DIAMETER+(WALL_THICKNESS*2));
   }
 }
@@ -113,13 +124,14 @@ module box_sides_bottom() {
 }
 
 module xcomb() {
+  // render()
   translate([-CARD_H/2, 0, 0])
   scale([2, 1, 1])
   intersection() {
     translate([CARD_H+WALL_THICKNESS, 0, 0])
       rotate([0, -90, 0])
       linear_extrude(CARD_H + 2*WALL_THICKNESS)
-      honeycomb_alt(CARD_W, DECK_ARRAY_THICKNESS, 5, 1);
+      honeycomb_alt(CARD_W, DECK_ARRAY_THICKNESS, HEX_RADIUS, HEX_SPACING);
     deck_array();
     translate([0, 0, -WALL_THICKNESS]) 
       hull()
@@ -128,16 +140,17 @@ module xcomb() {
 }
 
 module zcomb() {
-  render()
+  // render()
   translate([0, 0, 5])
   scale([1, 1, 10])
   intersection() {
     translate([0, 0, -WALL_THICKNESS])
       linear_extrude(WALL_THICKNESS)
-      honeycomb_alt(CARD_H, DECK_ARRAY_THICKNESS, 5, 1);
+      honeycomb_alt(CARD_H, DECK_ARRAY_THICKNESS, HEX_RADIUS, HEX_SPACING);
     box_sides_bottom();
   }
 }
+
 
 difference() {
   plain_box();
@@ -145,3 +158,7 @@ difference() {
   ycomb();
   zcomb();
 }
+
+
+//%plain_box();
+//xcomb();
